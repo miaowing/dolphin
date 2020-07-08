@@ -1,0 +1,52 @@
+@import (reference) "../../styles/variables";
+
+.icon {
+  font-size: 24px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.list {
+  height: 536px;
+  overflow: auto;
+}
+
+.spin {
+  height: 536px;
+  width: 400px;
+  padding-top: 200px;
+
+  :global {
+    .ant-spin-text {
+      text-shadow: none !important;
+    }
+  }
+}
+
+.item {
+  border-bottom: 1px solid @border-color !important;
+
+  :global {
+    .ant-list-item, h4, .ant-list-item-meta-description {
+      color: @font-color !important;
+      border-bottom: none;
+    }
+  }
+
+  &:hover {
+    background-color: @hover-background-color;
+  }
+}
+
+.result {
+  :global {
+    .ant-result-title, .ant-result-subtitle {
+      color: @font-color;
+    }
+
+    .anticon {
+      background-color: white;
+      border-radius: 36px;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+@import (reference) "./variables";
+
+body {
+  background-color: @background-color;
+  font-size: 14px;
+  font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", "微软雅黑", "Hiragino Sans GB", Arial, SimSun, "宋体", STXihei, "华文细黑", sans-serif;
+}
+
+html, body, ul, ol, li, h1, h2, h3, p {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: @font-color !important;
+
+  &:hover {
+    color: white !important;
+  }
+}
+
+.balabala {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
