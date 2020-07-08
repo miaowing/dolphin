@@ -10,7 +10,7 @@ import { HostHelper } from "../helpers";
 @Injectable()
 export class StoreService implements OnModuleInit {
     private readonly homePath = app.getPath('home');
-    private readonly appPath = resolve(this.homePath, 'ssh-proxy');
+    private readonly appPath = resolve(this.homePath, 'dolphin');
     private hosts: SSHConfig[] = [];
 
     constructor(
