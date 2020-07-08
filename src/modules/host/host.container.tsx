@@ -96,7 +96,7 @@ export class HostContainer extends React.Component<HostContainerProps, HostConta
                     <Button loading={this.state.loading} type="primary" htmlType="submit">
                         确认
                     </Button>
-                    <Button htmlType="button" onClick={() => location.hash = 'home'}>
+                    <Button style={{ marginLeft: 10 }} htmlType="button" onClick={() => location.hash = 'home'}>
                         取消
                     </Button>
                 </Form.Item>
