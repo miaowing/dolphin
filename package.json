@@ -51,6 +51,7 @@
     "@electron-forge/maker-zip": "6.0.0-beta.45",
     "@electron-forge/plugin-auto-unpack-natives": "^6.0.0-beta.45",
     "@electron-forge/plugin-webpack": "^6.0.0-beta.45",
+    "@electron-forge/publisher-github": "^6.0.0-beta.45",
     "@types/react": "^16.8.10",
     "@types/react-dom": "^16.8.3",
     "@types/react-router-dom": "^4.3.1",

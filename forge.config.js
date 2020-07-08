@@ -17,6 +17,18 @@ module.exports = {
         ],
         prune: true,
     },
+    "publishers": [
+        {
+            name: '@electron-forge/publisher-github',
+            config: {
+                repository: {
+                    owner: 'miaowing',
+                    name: 'dolphin'
+                },
+                prerelease: true
+            }
+        }
+    ],
     "makers": [
         {
             "name": "@electron-forge/maker-squirrel",

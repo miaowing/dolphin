@@ -3,8 +3,9 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ProxyService } from "./services";
 import { INestApplicationContext } from "@nestjs/common";
+import { initAppMenu } from "./menu";
 
-require('update-electron-app')()
+// require('update-electron-app')()
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -42,6 +43,8 @@ const createWindow = () => {
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
+    initAppMenu(mainWindow);
+
     mainWindow.once('ready-to-show', () => {
         mainWindow.show()
     });
@@ -65,7 +68,7 @@ const createWindow = () => {
     });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
