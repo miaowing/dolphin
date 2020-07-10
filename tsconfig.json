@@ -11,6 +11,7 @@
     "outDir": "./build",
     "sourceMap": true,
     "allowJs": true,
+    "resolveJsonModule": true,
     "lib": [
       "es6",
       "dom",
@@ -18,6 +19,7 @@
     ],
     "jsx": "react",
     "baseUrl": ".",
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "noUnusedLocals": true

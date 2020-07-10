@@ -4,6 +4,8 @@ import { AppModule } from "./app.module";
 import { ProxyService } from "./services";
 import { INestApplicationContext } from "@nestjs/common";
 import { initAppMenu } from "./menu";
+import * as packages from '../package.json';
+import { NestRPC } from "electron-nest-rpc";
 
 // require('update-electron-app')()
 
@@ -18,6 +20,7 @@ let context: INestApplicationContext;
 
 const createApp = async () => {
     context = await NestFactory.createApplicationContext(AppModule, {});
+    NestRPC.register(context);
 }
 
 const createWindow = () => {
@@ -31,7 +34,9 @@ const createWindow = () => {
         minWidth: 400,
         center: true,
         show: false,
-        fullscreenable: false,
+        resizable: false,
+        fullscreen: false,
+        title: packages.productName,
         backgroundColor: '#272b2e',
         titleBarStyle: 'hiddenInset',
         webPreferences: {

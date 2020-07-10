@@ -1,4 +1,5 @@
 import { shell, BrowserWindow, app, MenuItemConstructorOptions, Menu } from 'electron';
+import * as packages from '../package.json';
 
 export const initAppMenu = (window: BrowserWindow) => {
     if (process.platform === 'darwin') {
@@ -9,7 +10,7 @@ export const initAppMenu = (window: BrowserWindow) => {
 export const initMacMenu = (window: BrowserWindow): MenuItemConstructorOptions[] => {
     return [
         {
-            label: 'Dolphin',
+            label: packages.productName,
             submenu: [
                 {
                     label: '关于',
@@ -19,7 +20,7 @@ export const initMacMenu = (window: BrowserWindow): MenuItemConstructorOptions[]
                     type: 'separator'
                 },
                 {
-                    label: '隐藏Dolphin',
+                    label: `隐藏${packages.productName}`,
                     accelerator: 'Command+H',
                     role: 'hide'
                 },
