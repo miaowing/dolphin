@@ -1,0 +1,35 @@
+language: node_js
+node_js:
+  - "10"
+os:
+  - osx
+cache:
+  directories:
+    - "node_modules"
+    - $HOME/.cache/electron
+
+env:
+  - YARN_GPG=no
+
+branches:
+  only:
+    - master
+    - /^v\d+\.\d+\.\d+/
+
+before_install:
+  - npm i -g yarn
+install:
+  - yarn
+script:
+  - npm run make
+
+deploy:
+  provider: releases
+  overwrite: true
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+  file:
+    - out/make/*
+    - out/make/zip/darwin/x64/*
+  skip_cleanup: true
+  draft: true
