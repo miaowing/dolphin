@@ -31,7 +31,7 @@ export const initMacMenu = (window: BrowserWindow): MenuItemConstructorOptions[]
                 },
                 {
                     label: '显示所有',
-                    role: 'unhide:'
+                    role: 'unhide'
                 },
                 {
                     type: 'separator'
@@ -54,7 +54,7 @@ export const initMacMenu = (window: BrowserWindow): MenuItemConstructorOptions[]
                 {
                     label: 'DevTools',
                     accelerator: 'Alt+Command+I',
-                    role: 'toggledevtools',
+                    role: 'toggleDevTools',
                 }
             ]
         },
@@ -64,7 +64,7 @@ export const initMacMenu = (window: BrowserWindow): MenuItemConstructorOptions[]
                 {
                     label: '最小化',
                     accelerator: 'Command+M',
-                    role: 'minimize:'
+                    role: 'minimize'
                 },
                 {
                     label: '关闭',
