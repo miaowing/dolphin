@@ -73,6 +73,11 @@ module.exports = {
     plugins: [
         new TsconfigPathsPlugin({configFile: path.resolve(__dirname, 'tsconfig.json')}),
     ],
+    externals: {
+        '@nestjs/common': 'commonjs2 @nestjs/common',
+        'socksv5': 'commonjs2 socksv5',
+        'ssh2': 'commonjs2 ssh2',
+    },
     resolve: {
         modules: ['node_modules'],
         extensions: [

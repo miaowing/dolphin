@@ -2,9 +2,9 @@ import * as React from 'react';
 import { FormInstance } from "antd/lib/form";
 import { Button, Form, Input } from "antd";
 import * as styles from './host.m.less';
-import { ipcRenderer } from 'electron';
 import { SSHConfig } from "../../interfaces/ssh-config.interface";
-import { EVENT_ADD_HOST, EVENT_EDIT_HOST, EVENT_GET_HOST } from "../../constants";
+import { nestRPC } from 'electron-nest-rpc';
+import { StoreService } from "../../services";
 
 interface HostContainerState {
     loading?: boolean;
@@ -16,6 +16,7 @@ interface HostContainerProps {
 }
 
 export class HostContainer extends React.Component<HostContainerProps, HostContainerState> {
+    private storeService = nestRPC<StoreService>(StoreService);
     private readonly formRef = React.createRef<FormInstance>();
     private readonly layout = {
         labelCol: { span: 8 },
@@ -29,40 +30,32 @@ export class HostContainer extends React.Component<HostContainerProps, HostConta
 
     componentWillUnmount() {
         this.formRef.current.resetFields();
-        ipcRenderer.removeAllListeners(EVENT_ADD_HOST);
-        ipcRenderer.removeAllListeners(EVENT_GET_HOST);
     }
 
-    componentWillMount() {
+    async componentDidMount() {
         const { hostId } = this.props;
         if (hostId !== undefined) {
-            console.log('hostId: ', hostId);
-            ipcRenderer.on(EVENT_GET_HOST, (event, host) => {
-                console.log(host);
-                this.formRef.current.setFieldsValue(host);
-            });
-            ipcRenderer.send(EVENT_GET_HOST, hostId);
+            const host = await this.storeService.getHostByIndex(hostId);
+            this.formRef.current.setFieldsValue(host);
         }
     }
 
-    componentDidMount() {
-        this.formRef.current.setFieldsValue({ port: 22 });
-        ipcRenderer.on(EVENT_ADD_HOST, async (event, success) => {
-            this.setState({ loading: false, success: success as boolean });
-            await this.formRef.current.validateFields(['name']);
-            if (success) {
-                location.hash = 'home';
-            }
-        });
-    }
-
-    onConfirm(config: SSHConfig) {
+    async onConfirm(config: SSHConfig) {
         const { hostId } = this.props;
         this.setState({ loading: true });
-        ipcRenderer.send(
-            hostId !== undefined ? EVENT_EDIT_HOST : EVENT_ADD_HOST,
-            hostId ? { index: hostId, config } : config
-        );
+
+        let success = false;
+        try {
+            if (hostId === undefined) {
+                success = await this.storeService.addHost(config);
+            } else {
+                success = await this.storeService.editHost(hostId, config);
+            }
+        } catch (e) {
+        }
+
+        this.setState({ loading: false, success: success });
+        location.hash = 'home';
     }
 
     render() {

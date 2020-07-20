@@ -1,12 +1,12 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { SSHConfig } from "../interfaces/ssh-config.interface";
-import { app, ipcMain } from 'electron';
+import { app } from 'electron';
 import { resolve } from "path";
 import * as mkdirp from 'mkdirp';
 import { readFileSync, writeFileSync } from "fs";
-import { EVENT_ADD_HOST, EVENT_DELETE_HOST, EVENT_EDIT_HOST, EVENT_GET_HOST, EVENT_LIST_HOST } from "../constants";
 import { HostHelper } from "../helpers";
 import { default as JSEncrypt } from 'nodejs-jsencrypt';
+import { IConfig } from "../interfaces/config.interface";
 
 @Injectable()
 export class StoreService implements OnModuleInit {
@@ -50,7 +50,9 @@ export class StoreService implements OnModuleInit {
     private readonly homePath = app.getPath('home');
     private readonly appPath = resolve(this.homePath, 'dolphin');
     private readonly hostsFilename = 'hosts.data';
+    private readonly configFilename = 'data.data';
     private hosts: SSHConfig[] = [];
+    private config: IConfig = { proxyPort: 1080 };
     private encrypt = new JSEncrypt();
     private decrypt = new JSEncrypt();
 
@@ -62,35 +64,31 @@ export class StoreService implements OnModuleInit {
     }
 
     onModuleInit(): any {
+        mkdirp(this.appPath);
         try {
-            mkdirp(this.appPath);
-
-            const encrypted = readFileSync(resolve(this.appPath, this.hostsFilename)).toString();
-            this.hosts = JSON.parse(this.decrypt.decrypt(encrypted)) || [] as SSHConfig[];
+            const dataEncrypted = readFileSync(resolve(this.appPath, this.hostsFilename)).toString();
+            this.hosts = JSON.parse(this.decrypt.decrypt(dataEncrypted)) || [] as SSHConfig[];
         } catch (e) {
             console.log(e);
         }
+        try {
+            const configEncrypted = readFileSync(resolve(this.appPath, this.configFilename)).toString();
+            this.config = JSON.parse(this.decrypt.decrypt(configEncrypted)) || { proxyPort: 1080 } as IConfig;
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
-        ipcMain.on(EVENT_ADD_HOST, (event, config) => {
-            const success = this.addHost(config);
-            event.sender.send(EVENT_ADD_HOST, success);
-        });
+    getConfig(): IConfig {
+        return this.config;
+    }
 
-        ipcMain.on(EVENT_EDIT_HOST, (event, { index, config }) => {
-            const success = this.editHost(index, config);
-            event.sender.send(EVENT_ADD_HOST, success);
-        });
-
-        ipcMain.on(EVENT_GET_HOST, (event, index) => {
-            event.sender.send(EVENT_GET_HOST, this.getHostByIndex(index));
-        });
-        ipcMain.on(EVENT_LIST_HOST, (event) => {
-            event.sender.send(EVENT_LIST_HOST, this.hosts);
-        });
-        ipcMain.on(EVENT_DELETE_HOST, (event, hostname) => {
-            this.deleteHost(hostname);
-            event.sender.send(EVENT_LIST_HOST, this.hosts);
-        });
+    updateConfig(config: IConfig) {
+        this.config = config;
+        writeFileSync(
+            resolve(this.appPath, this.configFilename),
+            this.encrypt.encrypt(JSON.stringify(config))
+        );
     }
 
     getHosts() {

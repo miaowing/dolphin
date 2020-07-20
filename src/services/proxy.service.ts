@@ -1,12 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { PROXY_PORT } from "../constants";
+import { StoreService } from "./store.service";
 
 
 @Injectable()
 export class ProxyService {
     private readonly execute = promisify(exec);
+
+    constructor(
+        private readonly storeService: StoreService,
+    ) {
+    }
 
     async getMacOSEthernet(): Promise<string[]> {
         const { stdout } = await this.execute('networksetup -listallhardwareports');
@@ -29,7 +34,8 @@ export class ProxyService {
         if (!ethernet) {
             ethernet = (await this.getMacOSEthernet())[0];
         }
-        await this.execute(`networksetup -setsocksfirewallproxy "${ethernet}" 127.0.0.1 ${PROXY_PORT}`);
+        const config = this.storeService.getConfig();
+        await this.execute(`networksetup -setsocksfirewallproxy "${ethernet}" 127.0.0.1 ${config.proxyPort}`);
         await this.execute(`networksetup -setsocksfirewallproxystate "${ethernet}" on`);
     }
 

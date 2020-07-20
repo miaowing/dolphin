@@ -1,0 +1,20 @@
+@import (reference) "../../styles/variables";
+
+.form {
+  margin: 0 10px;
+
+  label {
+    color: @font-color;
+  }
+
+  input {
+    color: @font-color;
+    background-color: @input-background-color;
+  }
+
+  :global {
+    .ant-input-password {
+      background-color: @input-background-color;
+    }
+  }
+}

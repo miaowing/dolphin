@@ -2,11 +2,16 @@ import { Client } from 'ssh2';
 import * as socks from 'socksv5';
 import { SSHConfig } from "../interfaces/ssh-config.interface";
 import { Injectable } from "@nestjs/common";
-import { PROXY_PORT } from "../constants";
+import { StoreService } from "./store.service";
 
 @Injectable()
 export class SSHService {
     private server: any;
+
+    constructor(
+        private readonly storeService: StoreService,
+    ) {
+    }
 
     stopProxy() {
         if (this.server) {
@@ -20,6 +25,8 @@ export class SSHService {
             if (this.server) {
                 this.stopProxy();
             }
+
+            const { proxyPort } = this.storeService.getConfig();
 
             this.server = socks.createServer((info, accept, deny) => {
                 const conn = new Client();
@@ -47,8 +54,8 @@ export class SSHService {
                     console.log(err);
                     deny();
                 }).connect(config);
-            }).listen(PROXY_PORT, '127.0.0.1', () => {
-                console.log('SOCKSv5 proxy server started on port 1080');
+            }).listen(proxyPort, '127.0.0.1', () => {
+                console.log('SOCKSv5 proxy server started on port ' + proxyPort);
                 resolve();
             }).useAuth(socks.auth.None());
         }))

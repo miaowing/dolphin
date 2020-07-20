@@ -7,7 +7,7 @@ export class HostActionsContainer extends React.Component<any, any> {
     render() {
         return <Action>
             <PlusSquareOutlined className={styles.button} onClick={() => location.hash = 'hosts'}/>
-            <SettingOutlined className={styles.button}/>
+            <SettingOutlined className={styles.button} onClick={() => location.hash = 'settings'}/>
         </Action>
     }
 }
