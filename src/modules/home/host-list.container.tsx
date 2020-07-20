@@ -3,7 +3,7 @@ import { Button, List, Result, Spin } from "antd";
 import { DatabaseFilled } from '@ant-design/icons';
 import * as styles from './host-list.m.less';
 import { SSHConfig } from "../../interfaces/ssh-config.interface";
-import { nestRPC } from "electron-nest-rpc";
+import { UseRPC } from "electron-nest-rpc";
 import { ConnectService, StoreService } from "../../services";
 
 interface HostListContainerState {
@@ -15,8 +15,10 @@ interface HostListContainerState {
 }
 
 export class HostListContainer extends React.Component<any, HostListContainerState> {
-    private readonly storeService = nestRPC<StoreService>(StoreService);
-    private readonly connectService = nestRPC<ConnectService>(ConnectService);
+    @UseRPC(StoreService, 'StoreService')
+    private readonly storeService: StoreService;
+    @UseRPC(ConnectService, 'ConnectService')
+    private readonly connectService: ConnectService;
     public state = {
         hosts: [],
         loading: false,
@@ -25,11 +27,22 @@ export class HostListContainer extends React.Component<any, HostListContainerSta
         host: null,
     };
 
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+        console.log(error);
+    }
+
     async componentDidMount() {
-        const { success, message, host } = await this.connectService.stats();
-        this.setState({ loading: false, connected: success, message, host });
-        const hosts = await this.storeService.getHosts();
-        this.setState({ hosts });
+        try {
+            console.log('test');
+            const { success, message, host } = await this.connectService.stats();
+            console.log(success, message, host);
+            this.setState({ loading: false, connected: success, message, host });
+            const hosts = await this.storeService.getHosts();
+            console.log(hosts);
+            this.setState({ hosts });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     async onConnect(hostname: string) {

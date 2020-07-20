@@ -28,7 +28,7 @@
     "@nestjs/common": "^6.0.5",
     "@nestjs/core": "^6.0.5",
     "antd": "^4.4.1",
-    "electron-nest-rpc": "^0.1.7",
+    "electron-nest-rpc": "^0.1.8",
     "electron-squirrel-startup": "^1.0.0",
     "mkdirp": "^1.0.4",
     "nodejs-jsencrypt": "^3.0.0-rc.1",

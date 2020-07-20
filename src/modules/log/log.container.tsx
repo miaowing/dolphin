@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { nestRPC } from "electron-nest-rpc";
+import { UseRPC } from "electron-nest-rpc";
 import { StoreService } from "../../services";
 import { Action } from "../../components/action.component";
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -13,7 +13,8 @@ interface LogContainerProps {
 }
 
 export class LogContainer extends React.Component<LogContainerProps, LogContainerState> {
-    private readonly storeService = nestRPC<StoreService>(StoreService);
+    @UseRPC(StoreService, 'StoreService')
+    private readonly storeService: StoreService;
     private timer;
 
     public state = {

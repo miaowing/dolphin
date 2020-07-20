@@ -3,7 +3,7 @@ import { FormInstance } from "antd/lib/form";
 import { Button, Form, Input } from "antd";
 import * as styles from './host.m.less';
 import { SSHConfig } from "../../interfaces/ssh-config.interface";
-import { nestRPC } from 'electron-nest-rpc';
+import { UseRPC } from 'electron-nest-rpc';
 import { StoreService } from "../../services";
 
 interface HostContainerState {
@@ -16,7 +16,8 @@ interface HostContainerProps {
 }
 
 export class HostContainer extends React.Component<HostContainerProps, HostContainerState> {
-    private storeService = nestRPC<StoreService>(StoreService);
+    @UseRPC(StoreService, 'StoreService')
+    private storeService: StoreService;
     private readonly formRef = React.createRef<FormInstance>();
     private readonly layout = {
         labelCol: { span: 8 },

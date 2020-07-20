@@ -2577,12 +2577,13 @@ electron-is-dev@^0.3.0:
   resolved "https://registry.npmjs.org/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
   integrity sha1-FOb9pcaOnk7L7/nM8DfL18BcWv4=
 
-electron-nest-rpc@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.npmjs.org/electron-nest-rpc/-/electron-nest-rpc-0.1.7.tgz#3b41ee4f80e8d1e9c82e316762a522ea986dbbd5"
-  integrity sha512-PH/ebIsd/dIYY8e5+XbTE+/7lpCXUGdYY0FfwZVKWJkUAqoJRzQpyoQY8cZVNovwwC9LP5rlruK1mzLLGI/s0g==
+electron-nest-rpc@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.npmjs.org/electron-nest-rpc/-/electron-nest-rpc-0.1.8.tgz#e821b24371d0c58fc5250d43cab5ab0f5287ad93"
+  integrity sha512-DyNLFK+vw5xk3UPmpzIHdU6zNvL+508uaVwN+KnXCAEA5BFLk1R0wQywThnXWp3I/jk+H9R8slX6WMiM8E/Jaw==
   dependencies:
     loadash "^1.0.0"
+    reflect-metadata "^0.1.13"
     uuid "^7.0.3"
 
 electron-notarize@^0.1.1:

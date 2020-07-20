@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FormInstance } from "antd/lib/form";
 import { Button, Form, Input } from "antd";
 import * as styles from './settings.m.less';
-import { nestRPC } from "electron-nest-rpc";
+import { UseRPC } from "electron-nest-rpc";
 import { StoreService } from "../../services";
 import { IConfig } from "../../interfaces/config.interface";
 
@@ -15,7 +15,8 @@ interface SettingsContainerProps {
 }
 
 export class SettingsContainer extends React.Component<SettingsContainerProps, SettingsContainerState> {
-    private readonly storeService = nestRPC<StoreService>(StoreService);
+    @UseRPC(StoreService, 'StoreService')
+    private readonly storeService: StoreService;
     private readonly formRef = React.createRef<FormInstance>();
     private readonly layout = {
         labelCol: { span: 8 },
