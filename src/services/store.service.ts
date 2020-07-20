@@ -7,6 +7,8 @@ import { readFileSync, writeFileSync } from "fs";
 import { HostHelper } from "../helpers";
 import { default as JSEncrypt } from 'nodejs-jsencrypt';
 import { IConfig } from "../interfaces/config.interface";
+import { ILogger } from "update-electron-app";
+import { InjectLogger } from "@nestcloud/logger";
 
 @Injectable()
 export class StoreService implements OnModuleInit {
@@ -58,6 +60,7 @@ export class StoreService implements OnModuleInit {
     private decrypt = new JSEncrypt();
 
     constructor(
+        @InjectLogger() private readonly logger: ILogger,
         private readonly hostHelper: HostHelper,
     ) {
         this.decrypt.setPrivateKey(this.privateKey);
@@ -70,11 +73,13 @@ export class StoreService implements OnModuleInit {
             const dataEncrypted = readFileSync(resolve(this.appPath, this.hostsFilename)).toString();
             this.hosts = JSON.parse(this.decrypt.decrypt(dataEncrypted)) || [] as SSHConfig[];
         } catch (e) {
+            this.logger.error(`read data file error: ${e.message}`);
         }
         try {
             const configEncrypted = readFileSync(resolve(this.appPath, this.configFilename)).toString();
             this.config = JSON.parse(this.decrypt.decrypt(configEncrypted)) || { proxyPort: 1080 } as IConfig;
         } catch (e) {
+            this.logger.error(`read config file error: ${e.message}`);
         }
     }
 
@@ -84,9 +89,7 @@ export class StoreService implements OnModuleInit {
 
     readLog() {
         const logs = readFileSync(resolve(this.appPath, this.logFilename)).toString();
-        const arrayLog = logs.split('\n');
-
-        return arrayLog;
+        return logs.split('\n');
     }
 
     updateConfig(config: IConfig) {

@@ -3,11 +3,11 @@ import { ProxyService } from "./proxy.service";
 import { SSHService } from "./ssh.service";
 import { StoreService } from "./store.service";
 import * as rp from 'request-promise';
-import * as Agent from 'socks5-http-client/lib/Agent';
 import { SleepHelper } from "../helpers";
 import { IConnectStatus } from "../interfaces/connect-status.interface";
 import { InjectLogger } from "@nestcloud/logger";
 import { ILogger } from "update-electron-app";
+import * as Agent from "socks5-http-client/lib/Agent";
 
 @Injectable()
 export class ConnectService {
@@ -45,24 +45,24 @@ export class ConnectService {
     private async pingGoogle() {
         const max = 3;
         let current = 0;
+        console.log(this.storeService.getConfig().proxyPort);
         while (true) {
             try {
                 await rp({
                     url: 'http://www.google.com',
                     method: 'get',
                     timeout: 2000,
-                    agentClass: Agent,
-                    agentOptions: {
+                    agent: new Agent({
                         socksHost: '127.0.0.1',
-                        socksPort: this.storeService.getConfig().proxyPort
-                    }
+                        socksPort: this.storeService.getConfig().proxyPort,
+                    }),
                 });
                 this.logger.log(`Ping google.com success`);
                 break;
             } catch (e) {
                 await this.sleepHelper.sleep(2000);
 
-                this.logger.warn(`Ping google.com error(${current + 1}): ${e.message}`);
+                this.logger.warn(`Ping google.com error(${current + 1}): ${e}`);
                 if (current >= max) {
                     throw new Error('Connection Error');
                 }
