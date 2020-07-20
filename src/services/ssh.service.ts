@@ -3,12 +3,15 @@ import * as socks from 'socksv5';
 import { SSHConfig } from "../interfaces/ssh-config.interface";
 import { Injectable } from "@nestjs/common";
 import { StoreService } from "./store.service";
+import { InjectLogger } from "@nestcloud/logger";
+import { ILogger } from "update-electron-app";
 
 @Injectable()
 export class SSHService {
     private server: any;
 
     constructor(
+        @InjectLogger() private readonly logger: ILogger,
         private readonly storeService: StoreService,
     ) {
     }
@@ -30,14 +33,14 @@ export class SSHService {
 
             this.server = socks.createServer((info, accept, deny) => {
                 const conn = new Client();
-                conn.on('ready', function () {
+                conn.on('ready', () => {
                     conn.forwardOut(info.srcAddr,
                         info.srcPort,
                         info.dstAddr,
                         info.dstPort,
                         (err, stream) => {
                             if (err) {
-                                console.log(err);
+                                this.logger.error(`[${config.name}][${config.host}] --> ${info.dstAddr}:${info.dstPort}: ${err.message}`);
                                 conn.end();
                                 return deny();
                             }
@@ -51,13 +54,18 @@ export class SSHService {
                                 conn.end();
                         });
                 }).on('error', (err) => {
-                    console.log(err);
+                    this.logger.error(`[${config.name}][${config.host}] --> ${info.dstAddr}:${info.dstPort}: ${err.message}`);
                     deny();
                 }).connect(config);
             }).listen(proxyPort, '127.0.0.1', () => {
-                console.log('SOCKSv5 proxy server started on port ' + proxyPort);
+                this.logger.log('SOCKSv5 proxy server started on port ' + proxyPort);
                 resolve();
             }).useAuth(socks.auth.None());
+
+            this.server.on('error', e => {
+                this.logger.error(`[${config.name}][${config.host}] ${e.message}`);
+                reject(e);
+            });
         }))
     }
 }

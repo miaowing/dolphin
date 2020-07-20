@@ -51,6 +51,7 @@ export class StoreService implements OnModuleInit {
     private readonly appPath = resolve(this.homePath, 'dolphin');
     private readonly hostsFilename = 'hosts.data';
     private readonly configFilename = 'data.data';
+    private readonly logFilename = 'dolphin.log';
     private hosts: SSHConfig[] = [];
     private config: IConfig = { proxyPort: 1080 };
     private encrypt = new JSEncrypt();
@@ -69,18 +70,23 @@ export class StoreService implements OnModuleInit {
             const dataEncrypted = readFileSync(resolve(this.appPath, this.hostsFilename)).toString();
             this.hosts = JSON.parse(this.decrypt.decrypt(dataEncrypted)) || [] as SSHConfig[];
         } catch (e) {
-            console.log(e);
         }
         try {
             const configEncrypted = readFileSync(resolve(this.appPath, this.configFilename)).toString();
             this.config = JSON.parse(this.decrypt.decrypt(configEncrypted)) || { proxyPort: 1080 } as IConfig;
         } catch (e) {
-            console.log(e);
         }
     }
 
     getConfig(): IConfig {
         return this.config;
+    }
+
+    readLog() {
+        const logs = readFileSync(resolve(this.appPath, this.logFilename)).toString();
+        const arrayLog = logs.split('\n');
+
+        return arrayLog;
     }
 
     updateConfig(config: IConfig) {

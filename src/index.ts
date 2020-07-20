@@ -6,6 +6,8 @@ import { INestApplicationContext } from "@nestjs/common";
 import { initAppMenu } from "./menu";
 import * as packages from '../package.json';
 import { NestRPC } from "electron-nest-rpc";
+import { NestLogger } from "@nestcloud/logger";
+import { resolve } from 'path';
 
 // require('update-electron-app')()
 
@@ -19,7 +21,29 @@ let mainWindow;
 let context: INestApplicationContext;
 
 const createApp = async () => {
-    context = await NestFactory.createApplicationContext(AppModule, {});
+    context = await NestFactory.createApplicationContext(AppModule, {
+        logger: new NestLogger({
+            filePath: '',
+            level: 'info',
+            transports: [{
+                transport: 'console',
+                level: 'debug',
+                colorize: true,
+                datePattern: 'YYYY-MM-DD hh:mm:ss',
+                label: 'dolphin',
+            }, {
+                filename: resolve(app.getPath('home'), 'dolphin/dolphin.log'),
+                transport: 'file',
+                level: 'info',
+                colorize: false,
+                datePattern: 'YYYY-MM-DD hh:mm:ss',
+                label: 'dolphin',
+                json: false,
+                maxFiles: 0,
+                maxSize: 10240,
+            }]
+        })
+    });
     NestRPC.register(context);
 }
 

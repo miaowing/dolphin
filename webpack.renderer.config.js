@@ -77,6 +77,9 @@ module.exports = {
         '@nestjs/common': 'commonjs2 @nestjs/common',
         'socksv5': 'commonjs2 socksv5',
         'ssh2': 'commonjs2 ssh2',
+        '@nestcloud/common': 'commonjs2 @nestcloud/common',
+        '@nestcloud/logger': 'commonjs2 @nestcloud/logger',
+        '@nestcloud/boot': 'commonjs2 @nestcloud/boot',
     },
     resolve: {
         modules: ['node_modules'],

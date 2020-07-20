@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { StoreService } from "./store.service";
+import { InjectLogger } from "@nestcloud/logger";
+import { ILogger } from "update-electron-app";
 
 
 @Injectable()
@@ -9,6 +11,7 @@ export class ProxyService {
     private readonly execute = promisify(exec);
 
     constructor(
+        @InjectLogger() private readonly logger: ILogger,
         private readonly storeService: StoreService,
     ) {
     }
@@ -37,6 +40,8 @@ export class ProxyService {
         const config = this.storeService.getConfig();
         await this.execute(`networksetup -setsocksfirewallproxy "${ethernet}" 127.0.0.1 ${config.proxyPort}`);
         await this.execute(`networksetup -setsocksfirewallproxystate "${ethernet}" on`);
+
+        this.logger.log(`Enable socks proxy at ${ethernet}${config.proxyPort} success`);
     }
 
     async disableMacOSSocksProxy(ethernet?: string) {
@@ -44,5 +49,6 @@ export class ProxyService {
             ethernet = (await this.getMacOSEthernet())[0];
         }
         await this.execute(`networksetup -setsocksfirewallproxystate "${ethernet}" off`);
+        this.logger.log(`Disable socks proxy at ${ethernet} success`);
     }
 }

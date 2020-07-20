@@ -6,12 +6,15 @@ import * as rp from 'request-promise';
 import * as Agent from 'socks5-http-client/lib/Agent';
 import { SleepHelper } from "../helpers";
 import { IConnectStatus } from "../interfaces/connect-status.interface";
+import { InjectLogger } from "@nestcloud/logger";
+import { ILogger } from "update-electron-app";
 
 @Injectable()
 export class ConnectService {
     private status: IConnectStatus = { success: false, message: '' };
 
     constructor(
+        @InjectLogger() private readonly logger: ILogger,
         private readonly proxyService: ProxyService,
         private readonly sshService: SSHService,
         private readonly storeService: StoreService,
@@ -54,13 +57,15 @@ export class ConnectService {
                         socksPort: this.storeService.getConfig().proxyPort
                     }
                 });
-                await this.sleepHelper.sleep(2000);
+                this.logger.log(`Ping google.com success`);
                 break;
             } catch (e) {
+                await this.sleepHelper.sleep(2000);
+
+                this.logger.warn(`Ping google.com error(${current + 1}): ${e.message}`);
                 if (current >= max) {
                     throw new Error('Connection Error');
                 }
-                console.log(`Try to test connection fail(${current})`);
                 current++;
             }
 
