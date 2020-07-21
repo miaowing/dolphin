@@ -8,6 +8,7 @@ import * as packages from '../package.json';
 import { NestRPC } from "electron-nest-rpc";
 import { NestLogger } from "@nestcloud/logger";
 import { resolve } from 'path';
+import { initTray } from "./tray";
 
 // require('update-electron-app')()
 
@@ -16,7 +17,11 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     app.quit();
 }
 
+app.dock.hide();
+
 let willQuit = false;
+// @ts-ignore
+let tray;
 let mainWindow;
 let context: INestApplicationContext;
 
@@ -74,6 +79,7 @@ const createWindow = () => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     initAppMenu(mainWindow);
+    tray = initTray(mainWindow);
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show()
