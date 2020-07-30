@@ -12,7 +12,8 @@ export const initTray = (window: BrowserWindow) => {
             e.preventDefault();
             window.show();
         } else {
-            window.moveTop();
+            window.setAlwaysOnTop(true);
+            window.setAlwaysOnTop(false);
         }
     });
 
