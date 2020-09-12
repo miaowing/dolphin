@@ -5,9 +5,40 @@ export const initAppMenu = (window: BrowserWindow) => {
     if (process.platform === 'darwin') {
         Menu.setApplicationMenu(Menu.buildFromTemplate(initMacMenu(window)));
     }
+    window.setMenuBarVisibility(false);
 };
 
-export const initMacMenu = (window: BrowserWindow): MenuItemConstructorOptions[] => {
+export const initWindowsMenu = (window: BrowserWindow): MenuItemConstructorOptions[] => {
+    return [
+        {
+            label: 'DevTools',
+            accelerator: 'Alt+Command+I',
+            click: () => {
+                window.webContents.openDevTools();
+            }
+        },
+        {
+            label: '反馈',
+            click: () => {
+                shell.openExternal('https://github.com/miaowing/dolphin/issues');
+            }
+        },
+        {
+            type: 'separator'
+        },
+        {
+            label: '关于',
+            role: 'about',
+        },
+        {
+            label: '关闭',
+            accelerator: 'Command+W',
+            click: () => app.exit(0)
+        }
+    ]
+}
+
+export const initMacMenu = (window?: BrowserWindow): MenuItemConstructorOptions[] => {
     return [
         {
             label: packages.productName,

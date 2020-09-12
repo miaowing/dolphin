@@ -40,8 +40,8 @@ export class LogContainer extends React.Component<LogContainerProps, LogContaine
             <Action>
                 <ArrowLeftOutlined className={styles.button} onClick={() => location.hash = 'home'}/>
             </Action>
-            <ul className={styles.content}>
-                {this.state.logs.map((log, index) => <li key={index}>{log}</li>)}
+            <ul className={styles.content} style={{height: process.platform !== 'darwin' ? 470 : 525}}>
+                {this.state.logs.filter(log => log).map((log, index) => <li key={index}>{log}</li>)}
             </ul>
         </div>
     }

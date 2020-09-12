@@ -43,7 +43,7 @@ export class ConnectService {
     }
 
     private async pingGoogle() {
-        const max = 3;
+        const max = 2;
         let current = 0;
         console.log(this.storeService.getConfig().proxyPort);
         while (true) {
@@ -60,7 +60,7 @@ export class ConnectService {
                 this.logger.log(`Ping google.com success`);
                 break;
             } catch (e) {
-                await this.sleepHelper.sleep(2000);
+                await this.sleepHelper.sleep(1000);
 
                 this.logger.warn(`Ping google.com error(${current + 1}): ${e}`);
                 if (current >= max) {
@@ -75,13 +75,13 @@ export class ConnectService {
     private async handleDisconnectEvent() {
         this.status = { success: false, message: '' };
         this.sshService.stopProxy();
-        await this.proxyService.disableMacOSSocksProxy();
+        await this.proxyService.disableProxy();
     }
 
     private async handleConnectEvent(hostname: string) {
         const config = this.storeService.getHost(hostname);
         await this.sshService.createProxy(config);
-        await this.proxyService.enableMacOSSocksProxy();
+        await this.proxyService.enableProxy();
         await this.pingGoogle();
     }
 }

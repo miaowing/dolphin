@@ -33,7 +33,6 @@ export class HostListContainer extends React.Component<any, HostListContainerSta
 
     async componentDidMount() {
         try {
-            console.log('test');
             const { success, message, host } = await this.connectService.stats();
             console.log(success, message, host);
             this.setState({ loading: false, connected: success, message, host });
@@ -79,6 +78,7 @@ export class HostListContainer extends React.Component<any, HostListContainerSta
             />
         }
         return <List
+            style={{height: process.platform === 'darwin' ? 536 : 460}}
             className={styles.list}
             itemLayout="horizontal"
             dataSource={this.state.hosts}

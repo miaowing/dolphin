@@ -7,8 +7,11 @@
 }
 
 .list {
-  height: 536px;
+  height: 460px;
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 
   :global {
     .ant-empty-normal {
@@ -18,8 +21,8 @@
 }
 
 .spin {
-  height: 536px;
-  width: 400px;
+  height: 100%;
+  width: 100%;
   padding-top: 200px;
 
   :global {
