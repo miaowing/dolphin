@@ -75,6 +75,44 @@ export const initMacMenu = (window?: BrowserWindow): MenuItemConstructorOptions[
             ]
         },
         {
+            label: '编辑',
+            submenu: [
+                {
+                    label: '撤销',
+                    accelerator: 'Command+Z',
+                    role: 'undo'
+                },
+                {
+                    label: '重做',
+                    accelerator: 'Shift+Command+Z',
+                    role: 'redo'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    label: '剪切',
+                    accelerator: 'Command+X',
+                    role: 'cut'
+                },
+                {
+                    label: '复制',
+                    accelerator: 'Command+C',
+                    role: 'copy'
+                },
+                {
+                    label: '粘贴',
+                    accelerator: 'Command+V',
+                    role: 'paste'
+                },
+                {
+                    label: '全选',
+                    accelerator: 'Command+A',
+                    role: 'selectAll'
+                }
+            ]
+        },
+        {
             label: '视图',
             submenu: [
                 {

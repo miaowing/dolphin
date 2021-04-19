@@ -42,10 +42,10 @@ export class ConnectService {
         return this.status;
     }
 
+    // @ts-ignore
     private async pingGoogle() {
         const max = 2;
         let current = 0;
-        console.log(this.storeService.getConfig().proxyPort);
         while (true) {
             try {
                 await rp({
@@ -82,6 +82,6 @@ export class ConnectService {
         const config = this.storeService.getHost(hostname);
         await this.sshService.createProxy(config);
         await this.proxyService.enableProxy();
-        await this.pingGoogle();
+        // await this.pingGoogle();
     }
 }
