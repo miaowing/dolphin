@@ -1,7 +1,7 @@
 {
   "name": "dolphin",
   "productName": "Dolphin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An electron ssh dynamic port forward client for MacOS",
   "repository": {
     "url": "https://github.com/miaowing/dolphin"
